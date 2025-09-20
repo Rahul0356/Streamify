@@ -37,7 +37,7 @@ res.cookie("jwt",token,{
     maxAge: 7 * 24 * 60 *60 *1000,
     httpOnly:true,
     sameSite:"strict",
-    secure:process.env.NODE_ENV  == "production"
+    secure:process.env.NODE_ENV  == "production",
 })
 res.status(201).json({success:true,user:newUser});
     } catch (error){
@@ -46,7 +46,7 @@ res.status(500).json({message:"Internal Server Error"});
     }
 }
 export async function login(req, res) {
-try {
+  try {
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -58,8 +58,10 @@ try {
 
     const isPasswordCorrect = await user.matchPassword(password);
     if (!isPasswordCorrect) return res.status(401).json({ message: "Invalid email or password" });
-const token = jwt.sign({userId:newUser._id},process.env.JWT_SECRET_KEY,{
-    expiresIn:"7d"
+
+
+const token = jwt.sign({userId:user._id},process.env.JWT_SECRET_KEY,{
+    expiresIn:"7d",
 })
 res.cookie("jwt",token,{
     maxAge: 7 * 24 * 60 *60 *1000,
